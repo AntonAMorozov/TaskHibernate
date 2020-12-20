@@ -2,12 +2,7 @@ package jm.task.core.jdbc.util;
 
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,9 +32,8 @@ public class Util {
         prop.setProperty("hibernate.connection.username", "root");
         prop.setProperty("hibernate.connection.password", "rss232");
         prop.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
-        prop.setProperty("show_sql", "true");
 
-        SessionFactory factory = new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
-        return factory;
+        return new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
+
     }
 }

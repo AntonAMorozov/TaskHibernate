@@ -1,14 +1,9 @@
 package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
-import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static jm.task.core.jdbc.util.Util.getSessionFactory;
@@ -65,7 +60,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> userList = null;
-        try (Session session = factory.openSession();) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             userList = session.createQuery("from User").getResultList();
         } catch (Exception e) {
