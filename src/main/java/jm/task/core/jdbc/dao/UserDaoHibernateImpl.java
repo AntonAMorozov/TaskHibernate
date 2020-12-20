@@ -2,13 +2,19 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static jm.task.core.jdbc.util.Util.getSessionFactory;
+
 public class UserDaoHibernateImpl implements UserDao {
+    SessionFactory factory = getSessionFactory();
 
 
     public UserDaoHibernateImpl() {
@@ -18,31 +24,62 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.createSQLQuery("CREATE TABLE IF NOT EXISTS`jmpptest`.`users` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+                "  `name` VARCHAR(45) NOT NULL,\n" +
+                "  `lastname` VARCHAR(45) NOT NULL,\n" +
+                "  `age` INT NOT NULL,\n" +
+                "  PRIMARY KEY (`id`))\n" +
+                "ENGINE = InnoDB;\n").executeUpdate();
+        session.getTransaction().commit();
     }
 
     @Override
     public void dropUsersTable() {
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.createSQLQuery("DROP TABLE IF EXISTS`jmpptest`.`users`").executeUpdate();
+        session.getTransaction().commit();
 
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.save(new User(name, lastName, age));
+        session.getTransaction().commit();
+        System.out.println("User с именем – " + name + " name добавлен в базу данных.");
     }
 
     @Override
     public void removeUserById(long id) {
-
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("delete User " + "where id = :id").setParameter("id", id).executeUpdate();
+        session.getTransaction().commit();
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> userList = null;
+        try (Session session = factory.openSession();) {
+            session.beginTransaction();
+            userList = session.createQuery("from User").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userList;
     }
 
     @Override
     public void cleanUsersTable() {
+        Session session = factory.openSession();
+        session.beginTransaction();
+        session.createQuery("delete User").executeUpdate();
+        session.getTransaction().commit();
 
     }
 }

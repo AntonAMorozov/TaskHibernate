@@ -12,8 +12,7 @@ import org.hibernate.cfg.Environment;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 
 public class Util {
 
@@ -29,5 +28,18 @@ public class Util {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public static SessionFactory getSessionFactory() {
+        Properties prop = new Properties();
+        prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/jmpptest?useUnicode=true&serverTimezone=UTC&useSSL=true&verifyServerCertificate=false");
+        prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
+        prop.setProperty("hibernate.connection.username", "root");
+        prop.setProperty("hibernate.connection.password", "rss232");
+        prop.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        prop.setProperty("show_sql", "true");
+
+        SessionFactory factory = new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
+        return factory;
     }
 }
