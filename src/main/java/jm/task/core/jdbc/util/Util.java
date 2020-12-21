@@ -25,15 +25,24 @@ public class Util {
         return connection;
     }
 
-    public static SessionFactory getSessionFactory() {
+    private static SessionFactory sessionFactory;
+
+    static {
         Properties prop = new Properties();
         prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/jmpptest?useUnicode=true&serverTimezone=UTC&useSSL=true&verifyServerCertificate=false");
         prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
         prop.setProperty("hibernate.connection.username", "root");
         prop.setProperty("hibernate.connection.password", "rss232");
         prop.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        try {
+            sessionFactory = new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        return new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
 
     }
 }
