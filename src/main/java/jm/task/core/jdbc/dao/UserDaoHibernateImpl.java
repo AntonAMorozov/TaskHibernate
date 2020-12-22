@@ -29,6 +29,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 "  PRIMARY KEY (`id`))\n" +
                 "ENGINE = InnoDB;\n").executeUpdate();
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -37,6 +38,7 @@ public class UserDaoHibernateImpl implements UserDao {
         session.beginTransaction();
         session.createSQLQuery("DROP TABLE IF EXISTS`jmpptest`.`users`").executeUpdate();
         session.getTransaction().commit();
+        session.close();
 
     }
 
@@ -47,6 +49,7 @@ public class UserDaoHibernateImpl implements UserDao {
         session.save(new User(name, lastName, age));
         session.getTransaction().commit();
         System.out.println("User с именем – " + name + " name добавлен в базу данных.");
+        session.close();
     }
 
     @Override
@@ -55,6 +58,7 @@ public class UserDaoHibernateImpl implements UserDao {
         session.beginTransaction();
         session.createQuery("delete User u " + "where u.id = :id").setParameter("id", id).executeUpdate();
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -75,6 +79,6 @@ public class UserDaoHibernateImpl implements UserDao {
         session.beginTransaction();
         session.createQuery("delete User").executeUpdate();
         session.getTransaction().commit();
-
+        session.close();
     }
 }
